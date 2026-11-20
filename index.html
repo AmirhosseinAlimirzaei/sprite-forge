@@ -1,0 +1,954 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark light">
+  <meta name="theme-color" content="#0a0a0c">
+  <meta name="description" content="A local, offline toolkit for 2D game art: background removal, trimming, resizing and PNG inspection.">
+  <title>Sprite Forge</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23141416'/%3E%3Cpath d='M0 0h16v16H0zM16 16h16v16H16z' fill='%23f0883e'/%3E%3Crect x='.5' y='.5' width='31' height='31' rx='7.5' fill='none' stroke='%23ffffff' stroke-opacity='.14'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="assets/styles.css">
+  <script type="module" src="assets/app.js"></script>
+</head>
+<body>
+  <svg class="icon-sprite" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+    <symbol id="i-sparkle" viewBox="0 0 24 24">
+      <path d="M12 3.2l1.7 5.1 5.1 1.7-5.1 1.7L12 16.8l-1.7-5.1L5.2 10l5.1-1.7L12 3.2Z"/>
+      <path d="M18.6 15.4l.9 2.1 2.1.9-2.1.9-.9 2.1-.9-2.1-2.1-.9 2.1-.9.9-2.1Z"/>
+    </symbol>
+    <symbol id="i-scissors" viewBox="0 0 24 24">
+      <circle cx="6" cy="6.5" r="2.6"/>
+      <circle cx="6" cy="17.5" r="2.6"/>
+      <path d="M8.3 8.1 20 19M8.3 15.9 20 5"/>
+    </symbol>
+    <symbol id="i-crop" viewBox="0 0 24 24">
+      <path d="M6 3v13a2 2 0 0 0 2 2h13"/>
+      <path d="M3 6h13a2 2 0 0 1 2 2v13"/>
+    </symbol>
+    <symbol id="i-maximize" viewBox="0 0 24 24">
+      <path d="M9 4H4v5M15 4h5v5M9 20H4v-5M15 20h5v-5"/>
+    </symbol>
+    <symbol id="i-cpu" viewBox="0 0 24 24">
+      <rect x="7" y="7" width="10" height="10" rx="2"/>
+      <path d="M9.5 3.5v3.5M14.5 3.5v3.5M9.5 17v3.5M14.5 17v3.5M3.5 9.5H7M3.5 14.5H7M17 9.5h3.5M17 14.5h3.5"/>
+    </symbol>
+    <symbol id="i-folder" viewBox="0 0 24 24">
+      <path d="M3.5 7.5a2 2 0 0 1 2-2h3.3l2 2h7.7a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2z"/>
+    </symbol>
+    <symbol id="i-image" viewBox="0 0 24 24">
+      <rect x="3.5" y="4.5" width="17" height="15" rx="2"/>
+      <circle cx="9" cy="10" r="1.5"/>
+      <path d="m4.5 17 4.5-4 3 2.5 3-3 4.5 4.5"/>
+    </symbol>
+    <symbol id="i-search" viewBox="0 0 24 24">
+      <circle cx="11" cy="11" r="6.5"/>
+      <path d="m16 16 4.5 4.5"/>
+    </symbol>
+    <symbol id="i-x" viewBox="0 0 24 24">
+      <path d="m6 6 12 12M18 6 6 18"/>
+    </symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24">
+      <path d="M5 12h14M12 5v14"/>
+    </symbol>
+    <symbol id="i-minus" viewBox="0 0 24 24">
+      <path d="M5 12h14"/>
+    </symbol>
+    <symbol id="i-check" viewBox="0 0 24 24">
+      <path d="m5 12.5 4.5 4.5L19 7.5"/>
+    </symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24">
+      <path d="M12 4.2 21 20H3z"/>
+      <path d="M12 10v4.2M12 17.2h.01"/>
+    </symbol>
+    <symbol id="i-download" viewBox="0 0 24 24">
+      <path d="M12 4v10m0 0 4.2-4.2M12 14 7.8 9.8M5 19.5h14"/>
+    </symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24">
+      <path d="M4 6.8h16M9.5 6.8V4.5h5v2.3M6.5 6.8l.9 13.2h9.2l.9-13.2"/>
+    </symbol>
+    <symbol id="i-refresh" viewBox="0 0 24 24">
+      <path d="M20 12a8 8 0 1 1-2.6-5.9"/>
+      <path d="M20 4.5V9h-4.5"/>
+    </symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24">
+      <rect x="9" y="9" width="11" height="11" rx="2"/>
+      <path d="M15 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h3"/>
+    </symbol>
+    <symbol id="i-chevron-down" viewBox="0 0 24 24">
+      <path d="m7 9.5 5 5 5-5"/>
+    </symbol>
+    <symbol id="i-arrow-left" viewBox="0 0 24 24">
+      <path d="M15 5 8 12l7 7"/>
+    </symbol>
+    <symbol id="i-arrow-right" viewBox="0 0 24 24">
+      <path d="m9 5 7 7-7 7"/>
+    </symbol>
+    <symbol id="i-dropper" viewBox="0 0 24 24">
+      <path d="m2 22 1-1h3l9-9M3 21v-3l9-9"/>
+      <path d="m15 6 3.4-3.4a2.1 2.1 0 1 1 3 3L18 9l.4.4a2.1 2.1 0 1 1-3 3l-3.8-3.8a2.1 2.1 0 1 1 3-3l.4.4Z"/>
+    </symbol>
+    <symbol id="i-layers" viewBox="0 0 24 24">
+      <path d="m12 3 9 5-9 5-9-5 9-5Z"/>
+      <path d="m3 12 9 5 9-5M3 16l9 5 9-5"/>
+    </symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24">
+      <rect x="4.5" y="10.5" width="15" height="10" rx="2"/>
+      <path d="M8 10.5v-3a4 4 0 0 1 8 0v3"/>
+    </symbol>
+    <symbol id="i-grid" viewBox="0 0 24 24">
+      <rect x="4" y="4" width="6.5" height="6.5" rx="1"/>
+      <rect x="13.5" y="4" width="6.5" height="6.5" rx="1"/>
+      <rect x="4" y="13.5" width="6.5" height="6.5" rx="1"/>
+      <rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1"/>
+    </symbol>
+    <symbol id="i-sort" viewBox="0 0 24 24">
+      <path d="M8 6h12M8 12h8M8 18h4M4 6v12m0 0-2.5-2.5M4 18l2.5-2.5"/>
+    </symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="4.2"/>
+      <path d="M12 2.5v2.6M12 18.9v2.6M2.5 12h2.6M18.9 12h2.6M5.3 5.3l1.9 1.9M16.8 16.8l1.9 1.9M18.7 5.3l-1.9 1.9M7.2 16.8l-1.9 1.9"/>
+    </symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24">
+      <path d="M20.4 13.7A8.6 8.6 0 0 1 10.3 3.6a8.6 8.6 0 1 0 10.1 10.1Z"/>
+    </symbol>
+    <symbol id="i-play" viewBox="0 0 24 24">
+      <path d="M8 5.2 19 12 8 18.8z"/>
+    </symbol>
+    <symbol id="i-stop" viewBox="0 0 24 24">
+      <rect x="7" y="7" width="10" height="10" rx="1.5"/>
+    </symbol>
+  </svg>
+
+  <header class="app-header">
+    <div class="brand">
+      <svg class="brand-mark" viewBox="0 0 24 24" aria-hidden="true">
+        <rect width="24" height="24" rx="7" class="brand-mark-bg"/>
+        <path d="M0 0h11v11H0zM12 12h11v11H12z" class="brand-mark-fg"/>
+        <rect x=".6" y=".6" width="22.8" height="22.8" rx="6.6" fill="none" class="brand-mark-line"/>
+      </svg>
+      <span class="brand-text">
+        <span class="brand-name">Sprite Forge</span>
+        <span class="brand-sub">local studio</span>
+      </span>
+    </div>
+
+    <div class="header-tools">
+      <span class="local-chip" title="Everything runs on this machine. Nothing is uploaded.">
+        <span class="dot"></span> local only
+      </span>
+      <button class="icon-btn theme-toggle" id="themeToggle" type="button" aria-label="Switch to light theme" title="Toggle theme (T)">
+        <svg class="icon icon-sun" aria-hidden="true"><use href="#i-sun"/></svg>
+        <svg class="icon icon-moon" aria-hidden="true"><use href="#i-moon"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <nav class="tabbar" role="tablist" aria-label="Tools">
+    <button class="tab is-active" type="button" role="tab" data-tab="bg" aria-selected="true" aria-controls="panel-bg">
+      <svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg><span>BG Remover</span>
+    </button>
+    <button class="tab" type="button" role="tab" data-tab="trim" aria-selected="false" aria-controls="panel-trim">
+      <svg class="icon" aria-hidden="true"><use href="#i-scissors"/></svg><span>Trimmer</span>
+    </button>
+    <button class="tab" type="button" role="tab" data-tab="resize" aria-selected="false" aria-controls="panel-resize">
+      <svg class="icon" aria-hidden="true"><use href="#i-maximize"/></svg><span>Resizer</span>
+    </button>
+    <button class="tab" type="button" role="tab" data-tab="crop" aria-selected="false" aria-controls="panel-crop">
+      <svg class="icon" aria-hidden="true"><use href="#i-crop"/></svg><span>Crop</span>
+    </button>
+    <button class="tab" type="button" role="tab" data-tab="checker" aria-selected="false" aria-controls="panel-checker">
+      <svg class="icon" aria-hidden="true"><use href="#i-search"/></svg><span>Checker</span>
+    </button>
+    <button class="tab" type="button" role="tab" data-tab="models" aria-selected="false" aria-controls="panel-models">
+      <svg class="icon" aria-hidden="true"><use href="#i-cpu"/></svg><span>Models</span>
+    </button>
+  </nav>
+
+  <main class="app-main">
+    <!-- ============================== BG REMOVER ============================== -->
+    <section class="tab-panel" id="panel-bg" data-panel="bg" role="tabpanel" aria-label="Background remover">
+      <div class="banner" id="bgBanner" hidden>
+        <svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg>
+        <div class="banner-body">
+          <strong>The background-removal engine is not available.</strong>
+          <span id="bgBannerText">Install it once with <code>py -m pip install "rembg[cpu,cli]"</code>, then restart the server.</span>
+        </div>
+        <button class="btn btn-ghost btn-sm" type="button" data-goto="models">Details</button>
+      </div>
+
+      <div class="layout">
+        <aside class="panel panel--queue">
+          <div class="panel-head">
+            <h2>Sources</h2>
+            <span class="muted" id="bgCount">0</span>
+          </div>
+          <button class="dropzone" id="bgDrop" type="button">
+            <svg class="icon dropzone-icon" aria-hidden="true"><use href="#i-plus"/></svg>
+            <strong>Add images</strong>
+            <span>or drop files &amp; folders here</span>
+          </button>
+          <button class="link-btn" id="bgAddFolder" type="button">
+            <svg class="icon" aria-hidden="true"><use href="#i-folder"/></svg> choose a folder instead
+          </button>
+          <ul class="file-list" id="bgList" aria-label="Queued images"></ul>
+          <div class="panel-foot">
+            <button class="btn btn-ghost btn-sm" id="bgClear" type="button" disabled>
+              <svg class="icon" aria-hidden="true"><use href="#i-trash"/></svg> Clear
+            </button>
+            <button class="btn btn-ghost btn-sm" id="bgZip" type="button" disabled>
+              <svg class="icon" aria-hidden="true"><use href="#i-download"/></svg> Save all
+            </button>
+          </div>
+        </aside>
+
+        <section class="panel panel--stage">
+          <div class="stage" id="bgStage">
+            <div class="stage-empty" id="bgStageEmpty">
+              <span class="stage-empty-art" aria-hidden="true"><svg class="icon"><use href="#i-image"/></svg></span>
+              <p>Add an image to preview it here</p>
+            </div>
+
+            <div class="compare" id="bgCompare" hidden>
+              <img class="compare-layer" id="bgBefore" alt="">
+              <div class="compare-after" id="bgAfterWrap">
+                <img class="compare-layer" id="bgAfter" alt="">
+              </div>
+              <div class="compare-line" id="bgLine" aria-hidden="true"><span class="compare-knob"></span></div>
+              <input class="compare-range" id="bgRange" type="range" min="0" max="100" value="50"
+                     aria-label="Compare original and cut-out">
+              <span class="compare-tag compare-tag--before">original</span>
+              <span class="compare-tag compare-tag--after">cut-out</span>
+            </div>
+
+            <div class="stage-spinner" id="bgWorking" hidden><span class="spinner"></span></div>
+          </div>
+
+          <div class="stage-bar">
+            <div class="stage-meta" id="bgMeta">No image selected</div>
+            <div class="stage-actions">
+              <button class="btn btn-ghost btn-sm" id="bgAnimate" type="button" disabled>
+                <svg class="icon" aria-hidden="true"><use href="#i-play"/></svg>
+                Animation
+              </button>
+              <button class="btn btn-secondary btn-sm" id="bgDownload" type="button" disabled>
+                <svg class="icon" aria-hidden="true"><use href="#i-download"/></svg> Download
+              </button>
+              <button class="btn btn-ghost btn-sm" id="bgStop" type="button" hidden>
+                <svg class="icon" aria-hidden="true"><use href="#i-stop"/></svg> Stop
+              </button>
+              <button class="btn btn-primary" id="bgRun" type="button" disabled>
+                <svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg> Remove background
+              </button>
+            </div>
+          </div>
+
+          <div class="progress progress--slim" id="bgProgressWrap" hidden>
+            <div class="progress-bar" id="bgProgress"></div>
+          </div>
+        </section>
+
+        <aside class="panel panel--settings">
+          <div class="panel-head"><h2>Settings</h2></div>
+
+          <div class="field">
+            <label class="field-label" for="bgModel">Model</label>
+            <div class="select-wrap">
+              <select class="select" id="bgModel"></select>
+              <svg class="icon chevron" aria-hidden="true"><use href="#i-chevron-down"/></svg>
+            </div>
+            <p class="field-note" id="bgModelNote">Reading models…</p>
+          </div>
+
+          <label class="switch">
+            <input type="checkbox" id="bgMatting">
+            <span class="switch-track"><span class="switch-thumb"></span></span>
+            <span class="switch-text">Alpha matting <em>cleaner edges, slower</em></span>
+          </label>
+
+          <div class="field" id="bgErodeField" hidden>
+            <label class="field-label" for="bgErode">Edge erosion <output class="out" id="bgErodeOut">10</output></label>
+            <input class="range" id="bgErode" type="range" min="0" max="24" step="1" value="10">
+          </div>
+
+          <div class="divider"></div>
+
+          <label class="switch">
+            <input type="checkbox" id="bgTrim" checked>
+            <span class="switch-track"><span class="switch-thumb"></span></span>
+            <span class="switch-text">Auto-trim <em>crop transparent edges</em></span>
+          </label>
+
+          <div class="field" id="bgPadField">
+            <label class="field-label" for="bgPad">Trim padding <output class="out" id="bgPadOut">0</output> px</label>
+            <input class="range" id="bgPad" type="range" min="0" max="40" step="1" value="0">
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="field">
+            <span class="field-label">Output format</span>
+            <div class="segmented" role="radiogroup" aria-label="Output format">
+              <label class="seg"><input type="radio" name="bg-format" value="png" checked><span>PNG</span></label>
+              <label class="seg"><input type="radio" name="bg-format" value="webp"><span>WebP</span></label>
+            </div>
+          </div>
+
+          <div class="field" id="bgQualityField" hidden>
+            <label class="field-label" for="bgQuality">WebP quality <output class="out" id="bgQualityOut">92</output></label>
+            <input class="range" id="bgQuality" type="range" min="50" max="100" step="1" value="92">
+          </div>
+
+          <div class="divider"></div>
+
+          <dl class="kv" id="bgStats">
+            <div><dt>Source</dt><dd>—</dd></div>
+            <div><dt>Result</dt><dd>—</dd></div>
+            <div><dt>Time</dt><dd>—</dd></div>
+          </dl>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ================================ TRIMMER =============================== -->
+    <section class="tab-panel" id="panel-trim" data-panel="trim" role="tabpanel" aria-label="Image trimmer" hidden>
+      <div class="layout">
+        <aside class="panel panel--queue">
+          <div class="panel-head">
+            <h2>Sources</h2>
+            <span class="muted" id="trimCount">0</span>
+          </div>
+          <button class="dropzone" id="trimDrop" type="button">
+            <svg class="icon dropzone-icon" aria-hidden="true"><use href="#i-plus"/></svg>
+            <strong>Add images</strong>
+            <span>or drop files &amp; folders here</span>
+          </button>
+          <button class="link-btn" id="trimAddFolder" type="button">
+            <svg class="icon" aria-hidden="true"><use href="#i-folder"/></svg> choose a folder instead
+          </button>
+          <ul class="file-list" id="trimList" aria-label="Queued images"></ul>
+          <div class="panel-foot">
+            <button class="btn btn-ghost btn-sm" id="trimClear" type="button" disabled>
+              <svg class="icon" aria-hidden="true"><use href="#i-trash"/></svg> Clear
+            </button>
+            <button class="btn btn-ghost btn-sm" id="trimZip" type="button" disabled>
+              <svg class="icon" aria-hidden="true"><use href="#i-download"/></svg> Save all
+            </button>
+          </div>
+        </aside>
+
+        <section class="panel panel--stage">
+          <div class="stage" id="trimStage">
+            <div class="stage-empty" id="trimStageEmpty">
+              <span class="stage-empty-art" aria-hidden="true"><svg class="icon"><use href="#i-scissors"/></svg></span>
+              <p>Add sprites to see the crop preview</p>
+            </div>
+            <div class="compare" id="trimCompare" hidden>
+              <img class="compare-layer" id="trimBefore" alt="">
+              <div class="compare-after" id="trimAfterWrap">
+                <img class="compare-layer" id="trimAfter" alt="">
+              </div>
+              <div class="compare-line" id="trimLine" aria-hidden="true"><span class="compare-knob"></span></div>
+              <input class="compare-range" id="trimRange" type="range" min="0" max="100" value="50"
+                     aria-label="Compare original and trimmed">
+              <span class="compare-tag compare-tag--before">original</span>
+              <span class="compare-tag compare-tag--after">trimmed</span>
+            </div>
+            <div class="stage-spinner" id="trimWorking" hidden><span class="spinner"></span></div>
+          </div>
+
+          <div class="stage-bar">
+            <div class="stage-meta" id="trimMeta">No image selected</div>
+            <div class="stage-actions">
+              <button class="btn btn-secondary btn-sm" id="trimDownload" type="button" disabled>
+                <svg class="icon" aria-hidden="true"><use href="#i-download"/></svg> Download
+              </button>
+              <button class="btn btn-primary" id="trimRun" type="button" disabled>
+                <svg class="icon" aria-hidden="true"><use href="#i-scissors"/></svg> Trim all
+              </button>
+            </div>
+          </div>
+          <div class="progress progress--slim" id="trimProgressWrap" hidden>
+            <div class="progress-bar" id="trimProgress"></div>
+          </div>
+        </section>
+
+        <aside class="panel panel--settings">
+          <div class="panel-head"><h2>Settings</h2></div>
+
+          <div class="field">
+            <label class="field-label" for="trimAlpha">Alpha threshold <output class="out" id="trimAlphaOut">10</output></label>
+            <input class="range" id="trimAlpha" type="range" min="0" max="254" step="1" value="10">
+            <p class="field-note">Pixels with lower alpha count as empty.</p>
+          </div>
+
+          <div class="field">
+            <label class="field-label" for="trimPad">Padding <output class="out" id="trimPadOut">0</output> px</label>
+            <input class="range" id="trimPad" type="range" min="0" max="40" step="1" value="0">
+          </div>
+
+          <div class="divider"></div>
+
+          <label class="switch">
+            <input type="checkbox" id="trimColorEnable">
+            <span class="switch-track"><span class="switch-thumb"></span></span>
+            <span class="switch-text">Color trim <em>ignore a border colour</em></span>
+          </label>
+
+          <div id="trimColorOpts" class="stack is-disabled">
+            <div class="field">
+              <label class="field-label" for="trimColor">Border colour</label>
+              <div class="color-row">
+                <input class="color-input" id="trimColor" type="color" value="#ffffff">
+                <input class="input input--hex" id="trimColorHex" type="text" value="#ffffff" spellcheck="false" aria-label="Colour hex">
+                <button class="btn btn-ghost btn-sm" id="trimColorPick" type="button">From image</button>
+              </div>
+            </div>
+            <div class="field">
+              <label class="field-label" for="trimFuzz">Tolerance <output class="out" id="trimFuzzOut">30</output></label>
+              <input class="range" id="trimFuzz" type="range" min="0" max="255" step="1" value="30">
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="field">
+            <span class="field-label">Output format</span>
+            <div class="segmented" role="radiogroup" aria-label="Output format">
+              <label class="seg"><input type="radio" name="trim-format" value="png" checked><span>PNG</span></label>
+              <label class="seg"><input type="radio" name="trim-format" value="webp"><span>WebP</span></label>
+            </div>
+          </div>
+
+          <div class="field" id="trimQualityField" hidden>
+            <label class="field-label" for="trimQuality">WebP quality <output class="out" id="trimQualityOut">92</output></label>
+            <input class="range" id="trimQuality" type="range" min="50" max="100" step="1" value="92">
+          </div>
+
+          <div class="divider"></div>
+          <dl class="kv" id="trimStats">
+            <div><dt>Before</dt><dd>—</dd></div>
+            <div><dt>After</dt><dd>—</dd></div>
+            <div><dt>Saved</dt><dd>—</dd></div>
+          </dl>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ================================ RESIZER =============================== -->
+    <section class="tab-panel" id="panel-resize" data-panel="resize" role="tabpanel" aria-label="Image resizer" hidden>
+      <div class="layout">
+        <aside class="panel panel--queue">
+          <div class="panel-head">
+            <h2>Sources</h2>
+            <span class="muted" id="resCount">0</span>
+          </div>
+          <button class="dropzone" id="resDrop" type="button">
+            <svg class="icon dropzone-icon" aria-hidden="true"><use href="#i-plus"/></svg>
+            <strong>Add images</strong>
+            <span>or drop files &amp; folders here</span>
+          </button>
+          <button class="link-btn" id="resAddFolder" type="button">
+            <svg class="icon" aria-hidden="true"><use href="#i-folder"/></svg> choose a folder instead
+          </button>
+          <ul class="file-list" id="resList" aria-label="Queued images"></ul>
+          <div class="panel-foot">
+            <button class="btn btn-ghost btn-sm" id="resClear" type="button" disabled>
+              <svg class="icon" aria-hidden="true"><use href="#i-trash"/></svg> Clear
+            </button>
+            <button class="btn btn-ghost btn-sm" id="resZip" type="button" disabled>
+              <svg class="icon" aria-hidden="true"><use href="#i-download"/></svg> Save all
+            </button>
+          </div>
+        </aside>
+
+        <section class="panel panel--stage">
+          <div class="stage" id="resStage">
+            <div class="stage-empty" id="resStageEmpty">
+              <span class="stage-empty-art" aria-hidden="true"><svg class="icon"><use href="#i-maximize"/></svg></span>
+              <p>Add images to preview the resize</p>
+            </div>
+            <div class="compare" id="resCompare" hidden>
+              <img class="compare-layer" id="resBefore" alt="">
+              <div class="compare-after" id="resAfterWrap">
+                <img class="compare-layer" id="resAfter" alt="">
+              </div>
+              <div class="compare-line" id="resLine" aria-hidden="true"><span class="compare-knob"></span></div>
+              <input class="compare-range" id="resRange" type="range" min="0" max="100" value="50"
+                     aria-label="Compare original and resized">
+              <span class="compare-tag compare-tag--before">original</span>
+              <span class="compare-tag compare-tag--after">resized</span>
+            </div>
+            <div class="stage-spinner" id="resWorking" hidden><span class="spinner"></span></div>
+          </div>
+
+          <div class="stage-bar">
+            <div class="stage-meta" id="resMeta">No image selected</div>
+            <div class="stage-actions">
+              <button class="btn btn-secondary btn-sm" id="resDownload" type="button" disabled>
+                <svg class="icon" aria-hidden="true"><use href="#i-download"/></svg> Download
+              </button>
+              <button class="btn btn-primary" id="resRun" type="button" disabled>
+                <svg class="icon" aria-hidden="true"><use href="#i-maximize"/></svg> Resize all
+              </button>
+            </div>
+          </div>
+          <div class="progress progress--slim" id="resProgressWrap" hidden>
+            <div class="progress-bar" id="resProgress"></div>
+          </div>
+        </section>
+
+        <aside class="panel panel--settings">
+          <div class="panel-head"><h2>Settings</h2></div>
+
+          <div class="field">
+            <label class="field-label" for="resPreset">Preset</label>
+            <div class="select-wrap">
+              <select class="select" id="resPreset">
+                <option value="custom">Custom</option>
+                <option value="128">128 × 128</option>
+                <option value="256">256 × 256</option>
+                <option value="512">512 × 512</option>
+                <option value="1024">1024 × 1024</option>
+                <option value="2048">2048 × 2048</option>
+                <option value="1920x1080">1920 × 1080</option>
+                <option value="1280x720">1280 × 720</option>
+              </select>
+              <svg class="icon chevron" aria-hidden="true"><use href="#i-chevron-down"/></svg>
+            </div>
+          </div>
+
+          <div class="field">
+            <span class="field-label">Target size</span>
+            <div class="size-row">
+              <label class="size-field"><span>W</span><input class="input" id="resWidth" type="number" min="1" max="16384" step="1" value="512"></label>
+              <span class="size-x" aria-hidden="true">×</span>
+              <label class="size-field"><span>H</span><input class="input" id="resHeight" type="number" min="1" max="16384" step="1" value="512"></label>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="field-label" for="resMode">Mode</label>
+            <div class="select-wrap">
+              <select class="select" id="resMode">
+                <option value="fit">Fit (no upscale)</option>
+                <option value="fit-up">Fit + upscale</option>
+                <option value="canvas">Exact canvas (pad transparent)</option>
+                <option value="long">Long edge</option>
+                <option value="short">Short edge</option>
+                <option value="width">Width only</option>
+                <option value="height">Height only</option>
+              </select>
+              <svg class="icon chevron" aria-hidden="true"><use href="#i-chevron-down"/></svg>
+            </div>
+            <p class="field-note" id="resModeNote">Scale down to fit, never larger.</p>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="field">
+            <span class="field-label">Resampling</span>
+            <div class="segmented segmented--wrap" role="radiogroup" aria-label="Resampling">
+              <label class="seg"><input type="radio" name="res-filter" value="smooth" checked><span>Smooth</span></label>
+              <label class="seg"><input type="radio" name="res-filter" value="pixel"><span>Pixel art</span></label>
+            </div>
+            <p class="field-note">Smooth for painted art, pixel art for crisp nearest-neighbour scaling.</p>
+          </div>
+
+          <div class="field">
+            <label class="field-label" for="resFormat">Output format</label>
+            <div class="select-wrap">
+              <select class="select" id="resFormat">
+                <option value="keep">Keep original</option>
+                <option value="png">PNG</option>
+                <option value="jpeg">JPEG</option>
+                <option value="webp">WebP</option>
+              </select>
+              <svg class="icon chevron" aria-hidden="true"><use href="#i-chevron-down"/></svg>
+            </div>
+          </div>
+
+          <div class="field" id="resQualityField" hidden>
+            <label class="field-label" for="resQuality">Quality <output class="out" id="resQualityOut">92</output></label>
+            <input class="range" id="resQuality" type="range" min="50" max="100" step="1" value="92">
+          </div>
+
+          <div class="divider"></div>
+          <dl class="kv" id="resStats">
+            <div><dt>Source</dt><dd>—</dd></div>
+            <div><dt>Output</dt><dd>—</dd></div>
+            <div><dt>Scale</dt><dd>—</dd></div>
+          </dl>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ================================= CROP ================================= -->
+    <section class="tab-panel" id="panel-crop" data-panel="crop" role="tabpanel" aria-label="Atlas cropper" hidden>
+      <div class="layout">
+        <aside class="panel panel--queue">
+          <div class="panel-head">
+            <h2>Crops</h2>
+            <span class="muted" id="cropCount">0</span>
+          </div>
+          <button class="dropzone" id="cropDrop" type="button">
+            <svg class="icon dropzone-icon" aria-hidden="true"><use href="#i-plus"/></svg>
+            <strong>Add an atlas</strong>
+            <span>or drop an image here</span>
+          </button>
+          <ul class="crop-list" id="cropList" aria-label="Saved crops"></ul>
+          <div class="panel-foot">
+            <button class="btn btn-ghost btn-sm" id="cropReset" type="button" disabled>
+              <svg class="icon" aria-hidden="true"><use href="#i-trash"/></svg> Reset
+            </button>
+            <button class="btn btn-ghost btn-sm" id="cropZip" type="button" disabled>
+              <svg class="icon" aria-hidden="true"><use href="#i-download"/></svg> ZIP
+            </button>
+          </div>
+        </aside>
+
+        <section class="panel panel--stage">
+          <div class="stage crop-stage" id="cropStage">
+            <div class="stage-empty" id="cropEmpty">
+              <span class="stage-empty-art" aria-hidden="true"><svg class="icon"><use href="#i-crop"/></svg></span>
+              <p>Add an atlas image, then drag a box around one icon</p>
+            </div>
+            <div class="crop-scroll" id="cropScroll" hidden>
+              <div class="crop-wrap" id="cropWrap">
+                <canvas id="cropCanvas"></canvas>
+                <div class="crop-box" id="cropBox" hidden></div>
+                <div class="crop-pop" id="cropPop" hidden>
+                  <span id="cropPopSize"></span>
+                  <button class="btn btn-primary btn-sm" id="cropSave" type="button">Save</button>
+                  <button class="btn btn-ghost btn-sm" id="cropCancel" type="button">Cancel</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="stage-bar">
+            <div class="stage-meta" id="cropMeta">No image loaded</div>
+            <div class="stage-actions">
+              <button class="btn btn-ghost btn-sm" id="cropZoomOut" type="button" disabled>−</button>
+              <button class="btn btn-ghost btn-sm" id="cropZoomFit" type="button" disabled>Fit</button>
+              <button class="btn btn-ghost btn-sm" id="cropZoomIn" type="button" disabled>+</button>
+            </div>
+          </div>
+        </section>
+
+        <aside class="panel panel--settings">
+          <div class="panel-head"><h2>Output</h2></div>
+
+          <div class="field">
+            <span class="field-label">Folder</span>
+            <button class="btn btn-secondary btn-sm" id="cropFolder" type="button">
+              <svg class="icon" aria-hidden="true"><use href="#i-folder"/></svg> Choose folder
+            </button>
+            <p class="field-note" id="cropFolderNote">Pick a folder once — every crop is written into it as a PNG.</p>
+          </div>
+
+          <div class="divider"></div>
+
+          <dl class="kv" id="cropStats">
+            <div><dt>Atlas</dt><dd>—</dd></div>
+            <div><dt>Selection</dt><dd>—</dd></div>
+            <div><dt>Saved</dt><dd>0</dd></div>
+          </dl>
+
+          <p class="hint"><strong>Enter</strong> saves the box and clears it for the next icon. <strong>Esc</strong> cancels it.</p>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ================================ CHECKER =============================== -->
+    <section class="tab-panel" id="panel-checker" data-panel="checker" role="tabpanel" aria-label="Image checker" hidden>
+      <div class="checker">
+        <div class="checker-empty" id="chkEmpty">
+          <div class="hero">
+            <div class="hero-art" aria-hidden="true">
+              <div class="hero-tile hero-tile--rear"><span class="hero-ring"></span></div>
+              <div class="hero-tile hero-tile--front"><span class="hero-orb"></span></div>
+              <span class="hero-alpha">α</span>
+            </div>
+            <p class="eyebrow">Image folder inspector</p>
+            <h1>See through<br><span>your assets.</span></h1>
+            <p class="lede">Open a folder to browse every image inside — including subfolders. Check transparency, dimensions and exact pixel colours. Nothing leaves your device.</p>
+            <button class="btn btn-primary btn-lg" id="chkBrowse" type="button">
+              <svg class="icon" aria-hidden="true"><use href="#i-folder"/></svg> Browse folder
+            </button>
+            <p class="hero-notes">
+              <span><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> PNG · JPG · WebP</span>
+              <span><svg class="icon" aria-hidden="true"><use href="#i-layers"/></svg> Subfolders included</span>
+              <span><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg> Stays local</span>
+            </p>
+          </div>
+        </div>
+
+        <div class="checker-view" id="chkView" hidden>
+          <div class="checker-bar">
+            <div class="source-block">
+              <span class="source-icon" aria-hidden="true"><svg class="icon"><use href="#i-folder"/></svg></span>
+              <div class="source-copy">
+                <h2 id="chkFolderName" title="Selected folder">Selected folder</h2>
+                <p id="chkAssetCount" aria-live="polite">0 images</p>
+              </div>
+            </div>
+
+            <div class="checker-tools">
+              <div class="search-field">
+                <svg class="icon" aria-hidden="true"><use href="#i-search"/></svg>
+                <input id="chkSearch" type="search" placeholder="Search files" autocomplete="off" spellcheck="false" aria-label="Search images">
+                <button class="search-clear" id="chkSearchClear" type="button" aria-label="Clear search" hidden>
+                  <svg class="icon" aria-hidden="true"><use href="#i-x"/></svg>
+                </button>
+              </div>
+
+              <div class="size-control">
+                <svg class="icon icon-small" aria-hidden="true"><use href="#i-grid"/></svg>
+                <input class="range range--flat" id="chkSize" type="range" min="0" max="100" step="1" value="30" aria-label="Thumbnail size">
+                <svg class="icon icon-large" aria-hidden="true"><use href="#i-grid"/></svg>
+              </div>
+
+              <div class="backdrop-picker" role="group" aria-label="Preview background">
+                <button class="swatch swatch-checker is-active" type="button" data-backdrop="checker" aria-label="Checkerboard" aria-pressed="true" title="Checkerboard"></button>
+                <button class="swatch swatch-dark" type="button" data-backdrop="dark" aria-label="Dark" aria-pressed="false" title="Dark"></button>
+                <button class="swatch swatch-light" type="button" data-backdrop="light" aria-label="Light" aria-pressed="false" title="Light"></button>
+              </div>
+
+              <div class="sort-control">
+                <svg class="icon sort-icon" aria-hidden="true"><use href="#i-sort"/></svg>
+                <select id="chkSort" aria-label="Sort images">
+                  <option value="folder">Folder A–Z</option>
+                  <option value="name-asc">Name A–Z</option>
+                  <option value="name-desc">Name Z–A</option>
+                  <option value="newest">Newest</option>
+                  <option value="oldest">Oldest</option>
+                </select>
+                <svg class="icon chevron" aria-hidden="true"><use href="#i-chevron-down"/></svg>
+              </div>
+
+              <button class="btn btn-ghost btn-sm" id="chkChangeFolder" type="button">
+                <svg class="icon" aria-hidden="true"><use href="#i-folder"/></svg> Change
+              </button>
+            </div>
+          </div>
+
+          <div class="gallery" id="chkGallery"></div>
+
+          <div class="no-results" id="chkNoResults" hidden>
+            <span class="no-results-icon" aria-hidden="true"><svg class="icon"><use href="#i-search"/></svg></span>
+            <h3>No images found</h3>
+            <p id="chkNoResultsText">Try a different search term.</p>
+            <button class="btn btn-secondary" id="chkClearSearch" type="button">Clear search</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================ MODELS ================================ -->
+    <section class="tab-panel" id="panel-models" data-panel="models" role="tabpanel" aria-label="Models" hidden>
+      <div class="models-layout">
+        <section class="panel">
+          <div class="panel-head">
+            <h2>Engine</h2>
+            <span class="badge" id="engineBadge">checking</span>
+          </div>
+          <div class="panel-body">
+            <dl class="kv kv--wide" id="engineInfo">
+              <div><dt>rembg</dt><dd>—</dd></div>
+              <div><dt>Python</dt><dd>—</dd></div>
+              <div><dt>Model folder</dt><dd>—</dd></div>
+              <div><dt>Server</dt><dd>—</dd></div>
+            </dl>
+            <p class="hint" id="engineHint"></p>
+            <div class="row">
+              <button class="btn btn-secondary btn-sm" id="modelsRefresh" type="button">
+                <svg class="icon" aria-hidden="true"><use href="#i-refresh"/></svg> Refresh
+              </button>
+              <button class="btn btn-ghost btn-sm" id="modelsCopyPath" type="button">
+                <svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg> Copy path
+              </button>
+              <button class="btn btn-ghost btn-sm" id="modelsOpenFolder" type="button">
+                <svg class="icon" aria-hidden="true"><use href="#i-folder"/></svg> Open folder
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel panel--models">
+          <div class="panel-head">
+            <h2>AI models</h2>
+            <span class="muted" id="modelsCount"></span>
+          </div>
+          <ul class="model-list" id="modelList" aria-label="Available models"></ul>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <template id="fileTemplate">
+    <li class="file-item">
+      <span class="file-thumb"><img alt="" loading="lazy" decoding="async"></span>
+      <span class="file-info">
+        <span class="file-name"></span>
+        <span class="file-sub"></span>
+      </span>
+      <span class="file-state" aria-hidden="true"></span>
+      <button class="icon-btn file-remove" type="button" aria-label="Remove">
+        <svg class="icon" aria-hidden="true"><use href="#i-x"/></svg>
+      </button>
+    </li>
+  </template>
+
+  <dialog class="viewer" id="chkViewer" aria-labelledby="chkViewerName">
+    <div class="viewer-shell">
+      <header class="viewer-head">
+        <div class="viewer-heading">
+          <p class="viewer-kicker"><span>Preview</span><span class="kicker-sep">/</span><span id="chkViewerCounter" aria-live="polite">1 / 1</span></p>
+          <h2 class="viewer-name" id="chkViewerName">image.png</h2>
+          <p class="viewer-path" id="chkViewerPath"></p>
+        </div>
+        <button class="icon-btn viewer-close" id="chkViewerClose" type="button" aria-label="Close preview" title="Close (Esc)">
+          <svg class="icon" aria-hidden="true"><use href="#i-x"/></svg>
+        </button>
+      </header>
+
+      <div class="viewer-main">
+        <div class="viewer-stage preview-surface" id="chkViewerStage">
+          <div class="viewer-loader" id="chkViewerLoader" hidden><span></span></div>
+          <p class="viewer-error" id="chkViewerError" hidden>Preview unavailable</p>
+          <img class="viewer-image" id="chkViewerImage" alt="" draggable="false">
+          <div class="pixel-tip" id="chkPixelTip" hidden>
+            <span class="pixel-swatch"><span id="chkPixelFill"></span></span>
+            <span class="pixel-hex" id="chkPixelHex">#000000</span>
+            <span class="pixel-alpha" id="chkPixelAlpha">100%</span>
+            <span class="pixel-coord" id="chkPixelCoord">0, 0</span>
+          </div>
+          <div class="stage-nav" id="chkStageNav">
+            <button class="stage-nav-btn" id="chkPrev" type="button" aria-label="Previous image" title="Previous (←)">
+              <svg class="icon" aria-hidden="true"><use href="#i-arrow-left"/></svg>
+            </button>
+            <button class="stage-nav-btn" id="chkNext" type="button" aria-label="Next image" title="Next (→)">
+              <svg class="icon" aria-hidden="true"><use href="#i-arrow-right"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <aside class="viewer-panel">
+          <section class="panel-section">
+            <h3>Image</h3>
+            <dl class="meta-list">
+              <div><dt>Dimensions</dt><dd id="chkMetaDimensions">—</dd></div>
+              <div><dt>File size</dt><dd id="chkMetaSize">—</dd></div>
+              <div><dt>Format</dt><dd id="chkMetaFormat">—</dd></div>
+              <div><dt>Interlaced</dt><dd id="chkMetaInterlaced">—</dd></div>
+              <div><dt>Modified</dt><dd id="chkMetaModified">—</dd></div>
+              <div><dt>Folder</dt><dd class="meta-path" id="chkMetaFolder">—</dd></div>
+            </dl>
+          </section>
+
+          <section class="panel-section">
+            <div class="panel-heading-row">
+              <h3>Transparency</h3>
+              <span class="alpha-status" id="chkAlphaStatus">Checking</span>
+            </div>
+            <div class="alpha-bar is-loading" id="chkAlphaBar" aria-hidden="true">
+              <span class="alpha-segment alpha-clear" id="chkAlphaClearSeg"></span>
+              <span class="alpha-segment alpha-semi" id="chkAlphaSemiSeg"></span>
+              <span class="alpha-segment alpha-opaque" id="chkAlphaOpaqueSeg"></span>
+            </div>
+            <dl class="alpha-list">
+              <div><dt><span class="legend legend-clear"></span>Fully transparent</dt><dd id="chkAlphaClear">—</dd></div>
+              <div><dt><span class="legend legend-semi"></span>Partial alpha</dt><dd id="chkAlphaSemi">—</dd></div>
+              <div><dt><span class="legend legend-opaque"></span>Opaque</dt><dd id="chkAlphaOpaque">—</dd></div>
+            </dl>
+            <p class="panel-note" id="chkAlphaNote">Sampling pixel transparency…</p>
+          </section>
+        </aside>
+      </div>
+
+      <footer class="viewer-foot">
+        <div class="foot-group">
+          <span class="foot-label">Background</span>
+          <div class="backdrop-picker" role="group" aria-label="Preview background">
+            <button class="swatch swatch-checker is-active" type="button" data-backdrop="checker" aria-label="Checkerboard" aria-pressed="true" title="Checkerboard"></button>
+            <button class="swatch swatch-dark" type="button" data-backdrop="dark" aria-label="Dark" aria-pressed="false" title="Dark"></button>
+            <button class="swatch swatch-light" type="button" data-backdrop="light" aria-label="Light" aria-pressed="false" title="Light"></button>
+          </div>
+        </div>
+        <div class="foot-spacer"></div>
+        <button class="foot-btn" id="chkInspectorBtn" type="button" aria-pressed="false" title="Sample pixel colours (I)">
+          <svg class="icon" aria-hidden="true"><use href="#i-dropper"/></svg><span>Pick colour</span>
+        </button>
+        <div class="zoom-group" aria-label="Zoom controls">
+          <button class="zoom-btn" id="chkZoomOut" type="button" aria-label="Zoom out" title="Zoom out (−)">
+            <svg class="icon" aria-hidden="true"><use href="#i-minus"/></svg>
+          </button>
+          <button class="zoom-value is-fit" id="chkZoomReset" type="button" aria-label="Reset zoom" title="Reset to fit">Fit</button>
+          <button class="zoom-btn" id="chkZoomIn" type="button" aria-label="Zoom in" title="Zoom in (+)">
+            <svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>
+          </button>
+        </div>
+      </footer>
+    </div>
+  </dialog>
+
+  <dialog class="anim" id="animDialog" aria-labelledby="animTitle">
+    <div class="anim-shell">
+      <header class="anim-head">
+        <div class="anim-heading">
+          <p class="viewer-kicker">Sequence</p>
+          <h2 class="anim-title" id="animTitle">Animation preview</h2>
+        </div>
+        <span class="anim-count" id="animCount">0 / 0</span>
+        <button class="icon-btn" id="animClose" type="button" aria-label="Close preview" title="Close (Esc)">
+          <svg class="icon" aria-hidden="true"><use href="#i-x"/></svg>
+        </button>
+      </header>
+
+      <div class="anim-stage">
+        <img id="animFrame" alt="">
+      </div>
+
+      <footer class="anim-foot">
+        <button class="btn btn-secondary btn-sm" id="animPlay" type="button">Pause</button>
+        <label class="anim-speed">Speed
+          <input class="range" id="animSpeed" type="range" min="2" max="48" step="1" value="12">
+          <output class="out" id="animSpeedOut">12 fps</output>
+        </label>
+        <label class="switch anim-loop">
+          <input type="checkbox" id="animLoop" checked>
+          <span class="switch-track"><span class="switch-thumb"></span></span>
+          <span class="switch-text">Loop</span>
+        </label>
+      </footer>
+    </div>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite">
+    <span class="toast-dot" aria-hidden="true"></span>
+    <span id="toastMessage"></span>
+  </div>
+
+  <script>
+    /* Opening index.html directly cannot work: ES modules need http://. */
+    if (location.protocol === "file:") {
+      var warn = document.createElement("div");
+      warn.className = "file-warning";
+      warn.innerHTML =
+        '<strong>This page needs its local server.</strong>' +
+        '<span>Run <code>start.bat</code> (or <code>py server.py</code>) in the <code>web</code> folder, ' +
+        'then open <code>http://127.0.0.1:8756</code>. Opening the file directly blocks the scripts.</span>';
+      document.body.prepend(warn);
+    }
+  </script>
+
+  <input id="bgFiles" type="file" accept="image/png,image/jpeg,image/webp" multiple hidden>
+  <input id="bgFolder" type="file" accept="image/png,image/jpeg,image/webp" webkitdirectory directory multiple hidden>
+  <input id="trimFiles" type="file" accept="image/png,image/jpeg,image/webp" multiple hidden>
+  <input id="trimFolder" type="file" accept="image/png,image/jpeg,image/webp" webkitdirectory directory multiple hidden>
+  <input id="resFiles" type="file" accept="image/png,image/jpeg,image/webp" multiple hidden>
+  <input id="resFolder" type="file" accept="image/png,image/jpeg,image/webp" webkitdirectory directory multiple hidden>
+  <input id="chkFolder" type="file" accept="image/png,image/jpeg,image/webp" webkitdirectory directory multiple hidden>
+  <input id="cropFile" type="file" accept="image/*" hidden>
+</body>
+</html>
