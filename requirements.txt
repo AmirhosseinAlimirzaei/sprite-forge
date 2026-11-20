@@ -1,0 +1,4 @@
+# Optional: only the BG Remover needs rembg.
+# The server and the other four tools run on the Python standard library.
+# Install with: py -m pip install -r requirements.txt
+rembg[cpu,cli]

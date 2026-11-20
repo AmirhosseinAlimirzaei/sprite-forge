@@ -72,7 +72,17 @@ The UI is plain HTML/CSS/ES modules, with a small set of shared helpers (`assets
 - **Python 3.9+** — [Download here](https://www.python.org/downloads/)
 - That is the *only* requirement for the Trimmer, Resizer, Crop and Checker tabs.
 
-### 1. Run the server
+### 1. Install dependencies (BG Remover only)
+
+The server itself needs no third-party packages. To enable AI background removal, install the packages listed in `requirements.txt` with the same Python that runs the server:
+
+```bat
+py -m pip install -r requirements.txt
+```
+
+Skip this step if you only need the Trimmer, Resizer, Crop and Checker tabs.
+
+### 2. Run the server
 
 On Windows, double-click:
 
@@ -88,7 +98,7 @@ py server.py
 
 Then open <http://127.0.0.1:8756/> — the browser opens automatically.
 
-### 2. Useful flags
+### 3. Useful flags
 
 ```bat
 py server.py --port 8800     :: use another port if 8756 is busy
@@ -101,10 +111,10 @@ The server prints its URL, project root and model folder on startup. Press `Ctrl
 
 ## 🧠 Optional: AI background removal
 
-The **BG Remover** is powered by [rembg](https://github.com/danielgatis/rembg) by Daniel Gatis. Install the package once, for the same Python that runs the server:
+The **BG Remover** is powered by [rembg](https://github.com/danielgatis/rembg) by Daniel Gatis. It is the only feature that needs a third-party package — install it with the `requirements.txt` step in Quick Start, or directly:
 
 ```bat
-py -m pip install "rembg[cpu,cli]"
+py -m pip install -r requirements.txt
 ```
 
 Restart the server afterwards. Nothing else to configure — model weights download automatically on first use into `%USERPROFILE%\.u2net`, shared with the desktop edition of the toolkit.
@@ -190,6 +200,7 @@ Shows the Python version, whether `rembg` is installed, its version, the model f
 │   ├── lib/            shared UI helpers, image pipeline, ZIP writer, queue, API client
 │   └── tabs/           bg.js, trim.js, resize.js, crop.js, checker.js, models.js
 ├── docs/images/        README hero screenshot
+├── requirements.txt    optional rembg dependency (BG Remover only)
 ├── server.py           static file server + rembg JSON API (standard library only)
 └── start.bat           Windows double-click launcher
 ```
